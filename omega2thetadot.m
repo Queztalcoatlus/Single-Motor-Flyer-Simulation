@@ -8,5 +8,5 @@ function thetadot = omega2thetadot(omega, angles)
         0, cos(phi), cos(theta)*sin(phi)
         0, -sin(phi), cos(theta)*cos(phi)
     ];
-    thetadot = inverse(W) * omega;
+    thetadot = inv(W) * omega;
 end
