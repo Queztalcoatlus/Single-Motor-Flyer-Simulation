@@ -21,7 +21,7 @@ IB_P=diag([0 0 1.5])*10^(-5);
 rB_P=[0.17;0;0];
 KB_d=diag([0.55 0.55 1.1])*10^(-4);
 K_tau=1.1*10^(-7);
-K_f=-6.41*10^(-6);
+K_f=6.41*10^(-6);
 %Hover equations
 syms a1 a2 a3 OMG
 omgB_BE=[a1;a2;a3];
