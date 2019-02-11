@@ -2,7 +2,9 @@
     %Hover_solution
     f_pos=5;
     omega_hover=[7.0;-3.7;22.4];
-    C_CB=[0;0;sqrt(sum(omega_hover.^2))]/omega_hover;
+    %C_CB=[0;0;sqrt(sum(omega_hover.^2))]/omega_hover;
+    euler = [atan(omega_hover(2)/omega_hover(1)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
+    C_CB = inv(eul2rotm(euler,'ZYX'));
     fp_hover=2.26;
     %f_pos should not be one of the inputs
     %parameters
@@ -10,7 +12,8 @@
     m = 0.5;
     d = [0.17,0,0];
     %Moment of Inertia
-    I_B_B = diag([2.7e-3, 2.7e-3,5.2e-3]);  % Body Inertia
+    %I_B_B = diag([2.7e-3, 2.7e-3,5.2e-3]);  % Body Inertia
+    I_B_B = [102, 24, 9; 24, 318, 0; 9 0 414]*10^-(5);
     I_B_P = diag([0, 0,1.5e-5]);  % Propeller Inertia
     %thrust and torque coefficient
     K_f=6.41*10^(-6);
@@ -29,12 +32,13 @@
     n_des_C_sym(3,1)=sqrt(1-S(1,1)^2-S(2,1)^2);
     %In control coordinate C
     
-    omega_sym=C_CB\(S(3:5,1)-C_CB*omega_hover); %Changed
+    omega_sym = pinv(C_CB)*(S(3:5,1)-C_CB*omega_hover); %Changed
     
     fp_sym=S(6,1)+fp_hover;
     n_des_C_dot=-cross(C_CB*omega_sym,n_des_C_sym);
     F=sym('F',[6 1]); %input
     fp_dot=(f_pos+F(6,1)-fp_sym)/dt;
+    
     
     %disregard drag and angular acceleration of the propeller, and
     %represent the thrust in the inertial frame in order to calculate the
@@ -49,7 +53,7 @@
     tau=(cross(d',f_vector)+T_p) + t_B_d;%total torque
     % omega_B_BE_dot
     omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
-    
+    %omegadot = I_B_B\(tau + t_B_d - cross(omega_sym, I_B_B * omega_sym));
     %S_dot
     S_dot=[n_des_C_dot(1:2,1);omegadot;fp_dot];
     %Jacobian
