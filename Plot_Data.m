@@ -31,3 +31,14 @@ plot(tout,omega_x,tout,omega_y,tout,omega_z);
 legend('x','y','z');
 xlabel('time (s)');
 ylabel('omega (rad/s)');
+
+%Angular Velocity Omega in the body frame
+figure(4)
+theta = yout{4}.Values.Data;
+theta_x = squeeze(theta(1,1,:));
+theta_y = squeeze(theta(2,1,:));
+theta_z = squeeze(theta(3,1,:));
+plot(tout,theta_x,tout,theta_y,tout,theta_z);
+legend('x','y','z');
+xlabel('time (s)');
+ylabel('theta (rad)');

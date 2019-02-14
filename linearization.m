@@ -52,8 +52,8 @@
     f_vector=[0; 0; fp_sym];
     tau=(cross(d',f_vector)+T_p) + t_B_d;%total torque
     % omega_B_BE_dot
-    omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
-    %omegadot = I_B_B\(tau + t_B_d - cross(omega_sym, I_B_B * omega_sym));
+    %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
+    omegadot = I_B_B\(tau + t_B_d - cross(omega_sym, I_B_B * omega_sym));
     %S_dot
     S_dot=[n_des_C_dot(1:2,1);omegadot;fp_dot];
     %Jacobian
@@ -75,6 +75,16 @@
     R=1;
     N=zeros(6,1);
     [K,S_lqr,e] = lqr(A_res,B_res,Q,R,N);
+    
+    %Literature Value
+    A_lit = [0 23.7 0 -1 0 0;
+            -23.7 0 1 0 0 0;
+            0 0 -2.4 -9.5 5.2 -25.7;
+            0 0 17.0 -0.4 10.8 -58.8;
+            0 0 -1.8 -6.3 -1.0 -1.7;
+            0 0 0 0 0 -18.2];
+    B_lit = [0; 0; 0; 0; 0; 18.2];
+    [K_lit,S_lqr_lit,e_lit] = lqr(A_lit,B_lit,Q,R,N);
 %     s=zeros(6,1);
 %     s(1:2,1)=n_des_C(1:2,1);
 %     s(3:5,1)=omega_C_BE+omega_hover;
