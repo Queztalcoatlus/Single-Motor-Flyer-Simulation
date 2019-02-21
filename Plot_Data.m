@@ -39,6 +39,7 @@ theta_x = squeeze(theta(1,1,:));
 theta_y = squeeze(theta(2,1,:));
 theta_z = squeeze(theta(3,1,:));
 plot(tout,theta_x,tout,theta_y,tout,theta_z);
+%plot(tout,mod(theta_x,2*pi),tout,mod(theta_y,2*pi),tout,mod(theta_z,2*pi));
 legend('x','y','z');
 xlabel('time (s)');
 ylabel('theta (rad)');
