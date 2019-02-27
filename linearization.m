@@ -3,11 +3,11 @@
     f_pos=5;
     omega_hover=[7.0;-3.7;22.4];
     %C_CB=[0;0;sqrt(sum(omega_hover.^2))]/omega_hover;
-%     euler = [atan(omega_hover(2)/omega_hover(1)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
-%     C_CB = inv(eul2rotm(euler,'ZYX'));
+    euler = [atan(omega_hover(2)/omega_hover(1)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
+    C_CB = inv(eul2rotm(euler,'ZYX'));
 %Testing a new control frame where the propeller falls on the xz plane
-    euler = [-atan(omega_hover(2)/omega_hover(3)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
-    C_CB = inv(eul2rotm(e,'XYZ'));
+%     euler = [-atan(omega_hover(2)/omega_hover(3)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
+%     C_CB = inv(eul2rotm(e,'XYZ'));
     fp_hover=2.26;
     %f_pos should not be one of the inputs
     %parameters
