@@ -1,13 +1,13 @@
 %function u = linearization(n_des_C,omega_C_BE,fp,f_pos)
     %Hover_solution
-    f_pos=5;
+    f_pos=10;
     omega_hover=[7.0;-3.7;22.4];
-    %C_CB=[0;0;sqrt(sum(omega_hover.^2))]/omega_hover;
-    euler = [atan(omega_hover(2)/omega_hover(1)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
-    C_CB = inv(eul2rotm(euler,'ZYX'));
+    %omega_hover=[-6.16885093222700;-2.85161652241082;-25.8956464893109];
+%     euler = [atan(omega_hover(2)/omega_hover(1)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
+%     C_CB = inv(eul2rotm(euler,'ZYX'));
 %Testing a new control frame where the propeller falls on the xz plane
-%     euler = [-atan(omega_hover(2)/omega_hover(3)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
-%     C_CB = inv(eul2rotm(e,'XYZ'));
+    euler = [-atan(omega_hover(2)/omega_hover(3)),acos(sqrt(sum(omega_hover(2:3).^2))/sqrt(sum(omega_hover.^2))),0];
+    C_CB = inv(eul2rotm(euler,'XYZ'));
     fp_hover=2.26;
     %f_pos should not be one of the inputs
     %parameters
@@ -35,7 +35,7 @@
     n_des_C_sym(3,1)=sqrt(1-S(1,1)^2-S(2,1)^2);
     %In control coordinate C
     
-    omega_sym = pinv(C_CB)*(S(3:5,1)-C_CB*omega_hover); %Changed
+    omega_sym = pinv(C_CB)*(S(3:5,1)+C_CB*omega_hover); %Changed
     
     fp_sym=S(6,1)+fp_hover;
     n_des_C_dot=-cross(C_CB*omega_sym,n_des_C_sym);
@@ -56,19 +56,19 @@
     tau=(cross(d',f_vector)+T_p) + t_B_d;%total torque
     % omega_B_BE_dot
     %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
-    omegadot = I_B_B\(tau + t_B_d - cross(omega_sym, I_B_B * omega_sym));
+    omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym));
     %S_dot
     S_dot=[n_des_C_dot(1:2,1);omegadot;fp_dot];
     %Jacobian
     %F=[0;0;0;0;0;u_sym];
     
-    %F=[0;0;0;0;0;u_sym];
     A=jacobian(S_dot,S);
     B=jacobian(S_dot,F(6,1));
     B_1=subs(B,F,[0;0;0;0;0;0]);
     B_2=subs(B_1,S,zeros(6,1));
     B_res=double(B_2);
-    A_1=subs(A,F,[0;0;0;0;sqrt(sum(omega_hover.^2));fp_hover]);
+    %A_1=subs(A,F,[0;0;0;0;sqrt(sum(omega_hover.^2));fp_hover]);
+    A_1=subs(A,F,[0;0;0;0;0;fp_hover]);
     A_2=subs(A_1,S,zeros(6,1));
     A_res=double(A_2);
     %LQR
