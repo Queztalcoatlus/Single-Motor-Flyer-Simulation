@@ -1,4 +1,5 @@
 %Run after Single_motor_flyer_controller.slx
+close all;
 %Position
 figure(1)
 pos = yout{1}.Values.Data;
@@ -43,3 +44,21 @@ plot(tout,theta_x,tout,theta_y,tout,theta_z);
 legend('x','y','z');
 xlabel('time (s)');
 ylabel('theta (rad)');
+
+figure(10)
+thrust = yout{5}.Values.Data;
+% thrust_value = squeeze(thrust(1,1,:));
+plot(tout,thrust);
+xlabel('time (s)');
+ylabel('thrust (N)');
+xout = [pos_x,pos_y,pos_z]';
+thetaout = [theta_x,theta_y,theta_z]';
+xdotout = [v_x,v_y,v_z]';
+omegaout = [omega_x,omega_y,omega_z]';
+zero = ones(1,size(thrust,1));
+thrustout = [zero;thrust';zero;zero];
+ts = tout';
+dt = 0.001;
+results = struct('x', xout, 'theta', thetaout, 'vel', xdotout, ...
+                    'angvel', omegaout, 't', ts, 'dt', dt, 'input', thrustout);
+% Draw(results);
