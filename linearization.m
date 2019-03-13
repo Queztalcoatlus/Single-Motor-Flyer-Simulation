@@ -35,7 +35,7 @@
     n_des_C_sym(3,1)=sqrt(1-S(1,1)^2-S(2,1)^2);
     %In control coordinate C
     
-    omega_sym = pinv(C_CB)*(S(3:5,1)+C_CB*omega_hover); %Changed
+    omega_sym = inv(C_CB)*(S(3:5,1)+C_CB*omega_hover); %Changed
     
     fp_sym=S(6,1)+fp_hover;
     n_des_C_dot=-cross(C_CB*omega_sym,n_des_C_sym);

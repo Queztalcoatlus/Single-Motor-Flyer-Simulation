@@ -2,6 +2,16 @@
 function h = visualize_test(data)
     % Create a figure with three parts. One part is for a 3D visualization,
     % and the other two are for running graphs of angular velocity and displacement.
+%     % STEP 1: Create the video object
+%     vidHandle = VideoWriter('Drone Simulation', 'MPEG-4');
+% 
+%     % STEP 2: Set some options
+%     vidHandle.FrameRate = 10;
+%     vidHandle.Quality = 100;
+% 
+%     % STEP 3: Open the file
+%     open(vidHandle);
+    
     figure; plots = [subplot(3, 2, 1:4), subplot(3, 2, 5), subplot(3, 2, 6)];
     subplot(plots(1));
     pause;
@@ -17,6 +27,7 @@ function h = visualize_test(data)
 
     % Animate the quadcopter with data from the simulation.
     animate(data, t, thrusts, plots);
+%     close(vidHandle);
 end
 
 % Animate a quadcopter in flight, using data from the simulation.

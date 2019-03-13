@@ -58,7 +58,7 @@ omegaout = [omega_x,omega_y,omega_z]';
 zero = ones(1,size(thrust,1));
 thrustout = [zero;thrust';zero;zero];
 ts = tout';
-dt = 0.001;
+dt = 0.01;
 results = struct('x', xout, 'theta', thetaout, 'vel', xdotout, ...
                     'angvel', omegaout, 't', ts, 'dt', dt, 'input', thrustout);
 % Draw(results);
