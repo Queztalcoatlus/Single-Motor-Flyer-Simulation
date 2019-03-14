@@ -1,6 +1,6 @@
 %function u = linearization(n_des_C,omega_C_BE,fp,f_pos)
     %Hover_solution
-    f_pos=10;
+    f_pos=100;
     omega_hover=[7.0;-3.7;22.4];
     %omega_hover=[-6.16885093222700;-2.85161652241082;-25.8956464893109];
 %     euler = [atan(omega_hover(2)/omega_hover(1)),acos(omega_hover(3)/sqrt(sum(omega_hover.^2))),0];
@@ -38,7 +38,8 @@
     omega_sym = inv(C_CB)*(S(3:5,1)+C_CB*omega_hover); %Changed
     
     fp_sym=S(6,1)+fp_hover;
-    n_des_C_dot=-cross(C_CB*omega_sym,n_des_C_sym);
+    %n_des_C_dot=-cross(C_CB*omega_sym,n_des_C_sym);
+    n_des_C_dot=-C_CB*cross(omega_sym,inv(C_CB)*n_des_C_sym);
     F=sym('F',[6 1]); %input
     fp_dot=(f_pos+F(6,1)-fp_sym)/dt;
     
@@ -64,7 +65,7 @@
     
     A=jacobian(S_dot,S);
     B=jacobian(S_dot,F(6,1));
-    B_1=subs(B,F,[0;0;0;0;0;0]);
+    B_1=subs(B,F,[0;0;0;0;0;fp_hover]);
     B_2=subs(B_1,S,zeros(6,1));
     B_res=double(B_2);
     %A_1=subs(A,F,[0;0;0;0;sqrt(sum(omega_hover.^2));fp_hover]);
