@@ -22,6 +22,7 @@
     K_f=6.41*10^(-6);
     K_t=1.1 * 10^(-7);
     dt=0.015;%time constant
+    dt=1/18.2;
     %drag coefficient
     K_B_d=diag([0.7e-4, 0.7e-4, 1.4e-4]);
     %S=[n_des_C(1,1),;n_des_C(2,1);omega_C_BE(1,1);omega_C_BE(2,1);omega_C_BE(3,1)];
@@ -56,8 +57,9 @@
     f_vector=[0; 0; fp_sym];
     tau=(cross(d',f_vector)+T_p) + t_B_d;%total torque
     % omega_B_BE_dot
-    %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
-    omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym));
+    omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
+    %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed)));
+    %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym));
     %S_dot
     S_dot=[n_des_C_dot(1:2,1);omegadot;fp_dot];
     %Jacobian
