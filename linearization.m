@@ -14,6 +14,7 @@
     g = [0; 0; -9.8];
     m = 0.5;
     d = [0.17,0,0];
+    e_B_P = [0;0;1];
     %Moment of Inertia
     %I_B_B = diag([2.7e-3, 2.7e-3,5.2e-3]);  % Body Inertia
     I_B_B = [102, 24, 9; 24, 318, 0; 9 0 414]*10^-(5);
@@ -48,17 +49,22 @@
     %disregard drag and angular acceleration of the propeller, and
     %represent the thrust in the inertial frame in order to calculate the
     %angular acceleration of body in the inertial frame
-    prop_speed_sq=fp_sym/K_f;
-    prop_speed=[0;0;sqrt(abs(prop_speed_sq))]-[0;0;omega_sym(3,1)];
+    sq=fp_sym/K_f;
+    prop_speed=[0;0;sqrt(sq)]-[0;0;omega_sym(3,1)];
+    
+    prop_speed_sq = prop_speed(3,1)^2;
+    
+    
+    
     %From fp_dot=2*K_f*prop_speed_z*prop_speed_z_dot  (prop_speed_z is the scalar value of prop_speed)
-    prop_ang_acc=[0;0;fp_dot/(2*K_f*sqrt(prop_speed_sq))]; 
+    prop_ang_acc=[0;0;fp_dot/(2*K_f*prop_speed(3,1))]; 
     t_B_d=-sqrt(sum((omega_sym).^2))*K_B_d*omega_sym;
     T_p = [0;0;prop_speed_sq* K_t];
     f_vector=[0; 0; fp_sym];
     tau=(cross(d',f_vector)+T_p) + t_B_d;%total torque
     % omega_B_BE_dot
-    omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
-    %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed)));
+    %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed))-I_B_P*(prop_ang_acc));
+    omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym+I_B_P * omega_sym+I_B_P*(prop_speed)));
     %omegadot = I_B_B\(tau - cross(omega_sym, I_B_B * omega_sym));
     %S_dot
     S_dot=[n_des_C_dot(1:2,1);omegadot;fp_dot];
